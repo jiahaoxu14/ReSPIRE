@@ -120,18 +120,21 @@ export class DangerousHtmlUtil extends ShapeUtil<IDangerousHtmlShape> {
 	// override canScroll = () => true
 
 	component(shape: IDangerousHtmlShape) {
-		// const isEditing = useIsEditing(shape.id)
 		return (
 			<HTMLContainer id={shape.id} className="doc_container"
 				style={{ 
 					overflow: 'auto', 
-					backgroundColor: '#ffffff', //'#ccfaff', 
+					backgroundColor: '#ffffff',
 					padding: '10px', 
 					borderRadius: '15px', 
 					boxShadow: '6px 6px 2px 1px rgba(100, 100, 100, 0.5)',
 					border: '.2px solid black',
+					width: `${shape.props.w}px`,
+					height: `${shape.props.h}px`,
+					display: 'flex',
+					flexDirection: 'column'
 				}}>
-				<Box>
+				<Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
 					<div className="doc_title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
 						<Typography variant='body1' style={{ fontSize: 20 }}>
 							{shape.props.label}
@@ -141,8 +144,8 @@ export class DangerousHtmlUtil extends ShapeUtil<IDangerousHtmlShape> {
 						className="nodrag"
 						dangerouslySetInnerHTML={{ __html: highlightText(shape.props.content, shape.props.highlight, shape.props.llmhighlight, shape.props.commonhl, shape.props.omithl, shape.props.selectedhl, shape)}} 
 						style={{
-							// cursor: 'text',
-							overflow: 'auto', 
+							overflow: 'auto',
+							flex: 1,
 							fontSize: 'calc(13px + 0.1vw)', 
 							textAlign: 'left',
 							pointerEvents: 'all',

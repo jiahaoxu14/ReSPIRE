@@ -47,7 +47,7 @@ Note you should use cluster and node id provided to you in the input JSON object
 // add "\n" after each prompt
 
 //hard code ChatGPT API here, if you publicize the code, you need to remove it
-// process.env.OPENAI_API_KEY="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"
+// process.env.OPENAI_API_KEY="<Your OpenAI API Key Here>"
 // still need text prompt and interaction prompt
 
 export async function reportGenerationBlank (snapshot, taskP, introP, clusterP, conclusionP) {
@@ -127,10 +127,10 @@ export async function reportGenerationBlank (snapshot, taskP, introP, clusterP, 
 		// If you're using the API key input, we preference the key from there.
 		// It's okay if this is undefined—it will just mean that we'll use the
 		// one in the .env file instead.
-		// const apiKeyFromDangerousApiKeyInput = (
-       //      //      document.body.querySelector('#openai_key_risky_but_cool') as HTMLInputElement
-       //      // )?.value
-       const apiKeyFromDangerousApiKeyInput = "<Your OpenAI API Key Here>";
+		const apiKeyFromDangerousApiKeyInput = (
+                 document.body.querySelector('#openai_key_risky_but_cool') as HTMLInputElement
+            )?.value
+    //    const apiKeyFromDangerousApiKeyInput = "<Your OpenAI API Key Here>";
 
 		// make a request to openai. `fetchFromOpenAi` is a next.js server action,
 		// so our api key is hidden.

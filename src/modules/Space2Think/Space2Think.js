@@ -76,6 +76,7 @@ import { reportToSpace } from './space/reportToSpace.js';
 import { reportToClusterName } from './space/reportToClusterName.js';
 import { PromptsDialog } from './space/PromptsDialog.js';
 import { current } from '../LexicalEditor/time.js';
+import { ApiKeyDialog } from './space/ApiKeyDialog.js';
 
 // At the top of your file
 const originalConsoleError = console.error;
@@ -226,6 +227,9 @@ export default function Space() {
     const [editor, setEditor] = useState(null);
 	const currentToolId = useValue('current tool id', () => editor?.getCurrentToolId(), [editor])
     const snapshot = useValue('snapshot', () => editor?.store.getSnapshot(), [editor]);
+
+    const [apiKeyDialogOpen, setApiKeyDialogOpen] = useState(false);
+    const [apiKeyError, setApiKeyError] = useState('');
 
     // const MINUTE_MS = 5000;
     // const MINUTE_MS = 60000;
@@ -1073,6 +1077,123 @@ export default function Space() {
         }
     }, [selectedEntity]);
  
+    const handleGenerateReport = async () => {
+        const apiKeyInput = document.getElementById('openai_key_risky_but_cool');
+        if (!apiKeyInput || !apiKeyInput.value) {
+            setApiKeyError('');  // Clear any previous errors
+            setApiKeyDialogOpen(true);
+            return;
+        }
+        
+        setLoading(true);
+        setReportFinish(false);
+        let generatedReport = "";
+        try {
+            let snapshot = editor?.store.getSnapshot();
+            let ifhaveFrame = false;
+            for (var item in snapshot.store){
+                if (snapshot.store[item].type === "frame"){
+                    ifhaveFrame = true;
+                    break;
+                }
+            }
+            if (ifhaveFrame){
+                console.log(`[${current()}]`+ "[Space2Think] Enter into the refined report generation");
+                console.log(`[${current()}]`+ "[Space2Think] snapshot for generation", snapshot);
+                generatedReport = await reportGeneration(editor?.store.getSnapshot(), taskDescription, introduction, clusterDescription, conclusion);
+                reportToClusterName(editor, generatedReport);
+                keywordsToST(editor, generatedReport);
+                const UserKy = extractUserKeywords(editor?.store.getSnapshot());
+                dispatch(setUserKeywords(UserKy));
+                const preReport = report;
+                dispatch(setReport(generatedReport));
+                dispatch(setReportOpen());
+                setLoading(false);
+                setReportFinish(true);
+            } else {
+                console.log(`[${current()}]`+ "[Space2Think] Enter into the initial report generation");
+                const blankReport = await reportGenerationBlank(editor?.store.getSnapshot(), taskDescription, introduction, clusterDescription, conclusion);
+                generatedReport = await reportToSpace(editor, blankReport);
+                keywordsToST(editor, generatedReport);
+                const UserKy = extractUserKeywords(editor?.store.getSnapshot());
+                dispatch(setUserKeywords(UserKy));
+                setLoading(false);
+                setReportFinish(true);
+            }
+            console.log(`[${current()}]`+ "[Space2Think] generated report:", generatedReport);
+            setApiKeyError(''); // Clear any previous errors on success
+        } catch (error) {
+            console.error(`[${current()}]`+ "[Space2Think] Error generating report:", error);
+            setLoading(false);
+            
+            // Check if the error is related to the API key
+            if (error.message?.includes('API key') || 
+                error.message?.includes('Invalid authentication') ||
+                error.message?.includes('Incorrect API key') ||
+                error.message?.includes('auth')) {
+                setApiKeyError(error.message);
+                setApiKeyDialogOpen(true);
+                // Remove the invalid API key
+                const apiKeyInput = document.getElementById('openai_key_risky_but_cool');
+                if (apiKeyInput) {
+                    apiKeyInput.value = '';
+                }
+            }
+        }
+    };
+
+    function jsonDocUpload(e, editor) {
+        const fileReader = new FileReader();
+        fileReader.readAsText(e.target.files[0], "UTF-8");
+        fileReader.onload = (event) => {
+            try {
+                const data = JSON.parse(event.target.result);
+                if (!Array.isArray(data)) {
+                    throw new Error('Uploaded file must contain an array of documents');
+                }
+                
+                // Validate document format
+                data.forEach(doc => {
+                    if (!doc.label || !doc.content) {
+                        throw new Error('Each document must have label and content properties');
+                    }
+                });
+
+                // Convert documents to shapes
+                const shapes = data.map(doc => ({
+                    type: 'xx_html',
+                    x: 120,
+                    y: 120,
+                    props: {
+                        w: 500,
+                        h: 300,
+                        label: doc.label,
+                        content: doc.content,
+                        highlight: [],
+                        llmhighlight: [],
+                        commonhl: [],
+                        omithl: [],
+                        selectedhl: [],
+                        editing: false,
+                    }
+                }));
+
+                // Clear existing shapes and create new ones
+                editor?.selectAll();
+                editor?.deleteShapes(editor?.getSelectedShapeIds());
+                editor?.createShapes(shapes);
+                editor?.selectAll();
+                editor?.packShapes(editor?.getSelectedShapeIds(), 30);
+                editor?.selectNone();
+                
+                console.log(`[${current()}]`+ "[Space2Think] Uploaded documents", data);
+            } catch (error) {
+                console.error(`[${current()}]`+ "[Space2Think] Error uploading documents:", error);
+                alert('Error uploading documents: ' + error.message);
+            }
+        };
+    }
+
     return (
         <Box>
             <AppBar position="fixed" open={reportOpen}>            
@@ -1143,31 +1264,41 @@ export default function Space() {
                                             role={undefined}
                                             variant="contained"
                                             tabIndex={-1}
-                                            // startIcon={<CloudUploadIcon />}
                                         >
                                             Upload snapshot
-                                            {/* //fileReader */}
                                             <VisuallyHiddenInput id="fileInput"
-                                            // <input
                                                 type="file"
-                                                // onChange={jsonFileUpload}
                                                 onChange={(event)=>{
                                                     dispatch(setReport(''));
                                                     const fileReader = new FileReader();
-                                                    // let data = "";
                                                     fileReader.readAsText(event.target.files[0], "UTF-8");
                                                     fileReader.onload = (event) => {
-                                                    //   console.log("e.target.result", e.target.result);
-                                                    const data = JSON.parse(event.target.result);
-                                                    console.log(`[${current()}]`+ "[Space2Think] Uploaded Json Data", data);
-                                                    localStorage.setItem('my-editor-snapshot', JSON.stringify(data));
-                                                    const stringified = localStorage.getItem('my-editor-snapshot');
-                                                    const snapshot = JSON.parse(stringified);
-                                                    editor?.store.loadSnapshot(snapshot);
+                                                        const snapshotData = JSON.parse(event.target.result);
+                                                        console.log(`[${current()}]`+ "[Space2Think] Uploaded Json Data", snapshotData);
+                                                        localStorage.setItem('my-editor-snapshot', JSON.stringify(snapshotData));
+                                                        const stringified = localStorage.getItem('my-editor-snapshot');
+                                                        const snapshot = JSON.parse(stringified);
+                                                        editor?.store.loadSnapshot(snapshot);
                                                     };
                                                     handleClose();
                                                 }}
-
+                                            />
+                                        </MenuItem>
+                                        <MenuItem 
+                                            component="label"
+                                            role={undefined}
+                                            variant="contained"
+                                            tabIndex={-1}
+                                        >
+                                            Upload documents
+                                            <VisuallyHiddenInput
+                                                type="file"
+                                                accept=".json"
+                                                onChange={(event) => {
+                                                    dispatch(setReport(''));
+                                                    jsonDocUpload(event, editor);
+                                                    handleClose();
+                                                }}
                                             />
                                         </MenuItem>
                                     </MenuList>
@@ -1300,92 +1431,10 @@ export default function Space() {
                         <Button
                             className='toolbar-item'
                             style={{ color: '#8a817c' }}
-                            onClick={
-                                // check there are frames in the editor
-                                // if not, show a warning message
-                                async () => {
-                                    setLoading(true)
-                                    setReportFinish(false)
-                                    let generatedReport = "";
-                                    try {
-                                        let snapshot = editor?.store.getSnapshot();
-                                        // const stringified = JSON.stringify(snapshot)
-                                        // saveSnapshot(stringified); // add the snapshot to the local storage
-                                        let ifhaveFrame = false;
-                                        for (var item in snapshot.store){
-                                            if (snapshot.store[item].type === "frame"){
-                                                ifhaveFrame = true;
-                                                break;
-                                            }
-                                        }
-                                        if (ifhaveFrame){
-                                            console.log(`[${current()}]`+ "[Space2Think] Enter into the refined report generation");
-                                            console.log(`[${current()}]`+ "[Space2Think] snapshot for generation", snapshot);
-                                            generatedReport = await reportGeneration(editor?.store.getSnapshot(), taskDescription, introduction, clusterDescription, conclusion);
-                                            // update the cluster names
-                                            reportToClusterName(editor, generatedReport);
-                                            keywordsToST(editor, generatedReport);
-                                            const UserKy = extractUserKeywords(editor?.store.getSnapshot());
-                                            dispatch(setUserKeywords(UserKy));
-                                            const preReport = report;
-                                            dispatch(setReport(generatedReport));
-                                            dispatch(setReportOpen());
-                                            setLoading(false)
-                                            setReportFinish(true)
-                                            // if (preReport !== ""){
-                                            //     const compReport = showModifications(preReport, generatedReport);
-                                            //     console.log(`[${current()}]`+ "[Space2Think] Comparison Report", compReport);
-                                            //     dispatch(setModifiedJson(compReport));
-                                            //     dispatch(setModifiedState(true));
-                                            //     dispatch(setPreReport(preReport));
-                                            // }
-                                        }
-                                        else{
-                                            console.log(`[${current()}]`+ "[Space2Think] Enter into the initial report generation");
-                                            const blankReport = await reportGenerationBlank(editor?.store.getSnapshot(), taskDescription, introduction, clusterDescription, conclusion);
-                                            generatedReport = await reportToSpace(editor, blankReport);
-                                            // manage the information in Space to Think
-                                            keywordsToST(editor, generatedReport);
-                                            const UserKy = extractUserKeywords(editor?.store.getSnapshot());
-                                            dispatch(setUserKeywords(UserKy));
-                                            // const preReport = report;
-                                            // dispatch(setReport(generatedReport));
-                                            // dispatch(setReportOpen());
-                                            setLoading(false)
-                                            setReportFinish(true)
-                                            // if (preReport !== ""){
-                                            //     const compReport = showModifications(preReport, generatedReport);
-                                            //     console.log(`[${current()}]`+ "[Space2Think] Comparison Report", compReport);
-                                            //     dispatch(setModifiedJson(compReport));
-                                            //     dispatch(setModifiedState(true));
-                                            //     dispatch(setPreReport(preReport));
-                                            // }
-                                        }
-                                        
-                                        console.log(`[${current()}]`+ "[Space2Think] generated report:", generatedReport);
-                                        // keywordsToST(editor, generatedReport);
-                                        // const UserKy = extractUserKeywords(editor?.store.getSnapshot());
-                                        // dispatch(setUserKeywords(UserKy));
-                                        // const preReport = report;
-                                        // dispatch(setReport(generatedReport));
-                                        // dispatch(setReportOpen());
-                                        // setLoading(false)
-                                        // setReportFinish(true)
-                                        // if (preReport !== ""){
-                                        //     const compReport = showModifications(preReport, generatedReport);
-                                        //     console.log(`[${current()}]`+ "[Space2Think] Comparison Report", compReport);
-                                        //     dispatch(setModifiedJson(compReport));
-                                        //     dispatch(setModifiedState(true));
-                                        //     dispatch(setPreReport(preReport));
-                                        // }
-                                    } catch (error) {
-                                        console.error(`[${current()}]`+ "[Space2Think] Error generating report:", error);
-                                    }
-                                }
-                            }
+                            onClick={handleGenerateReport}
                         >
-                        <i className='format chatgpt' />
-                           Generate
+                            <i className='format chatgpt' />
+                            Generate
                         </Button>
                     </Tooltip>
                     </div>
@@ -1448,6 +1497,14 @@ export default function Space() {
                 onClick={() => {
                     dispatch(setPromptOpen(false))
                     }}
+            />
+            <ApiKeyDialog 
+                open={apiKeyDialogOpen}
+                onClose={() => {
+                    setApiKeyDialogOpen(false);
+                    setApiKeyError('');
+                }}
+                error={apiKeyError}
             />
             <Main open={reportOpen}>
                 <div className='editor_space' style={{ height: `${windowHeight-45}px`}}>

@@ -340,17 +340,15 @@ export default function ModifierPlugin() {
                                     paragraphNode.append(textBlockNode);
                                 }
 
-                            }else if (citationsDoc.includes(word)){
+                            }else if ((/^(?:[A-Za-z]+[_](?:[A-Za-z]+[_]?[a-z]?\d*|\d+)|\d+)$/).test(word) || citationsDoc.includes(word)){
                                 // citation
                                 const hlNode = $createHighlightDepNode('highlight-cite', word);
                                 hlNode.setStyle('color: #014591');
                                 for (var k in modifiedPart){
                                     if (start >= modifiedPart[k][0] && end <= modifiedPart[k][1]){
                                         hlNode.setStyle('text-decoration: #f77c7c wavy underline');
-                                        // console.log("underlineNode", under)
                                         under.push(hlNode.getKey());
                                     }
-                                    // break;
                                 }
                                 const textBlockNode = $createTextBlockNode()
                                 textBlockNode.append(hlNode);

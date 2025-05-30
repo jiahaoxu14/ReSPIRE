@@ -280,7 +280,7 @@ export default function ReportPlugin() {
                                 }
                             }else if (
                                 // citations.includes(word)
-                                (/^[A-Za-z]+_\d+$/).test(word)
+                                (/^(?:[A-Za-z]+[_](?:[A-Za-z]+[_]?[a-z]?\d*|\d+)|\d+)$/).test(word)
                             ){
                                 // citation
                                 const hlNode = $createHighlightDepNode('highlight-cite', word);

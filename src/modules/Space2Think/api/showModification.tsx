@@ -98,7 +98,7 @@ export async function showModifications (oriReport1, oriReport2) {
 		// const apiKeyFromDangerousApiKeyInput = (
        //      //      document.body.querySelector('#openai_key_risky_but_cool') as HTMLInputElement
        //      // )?.value
-       const apiKeyFromDangerousApiKeyInput = "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";
+       const apiKeyFromDangerousApiKeyInput = "<Your OpenAI API Key Here>";
 
 		// make a request to openai. `fetchFromOpenAi` is a next.js server action,
 		// so our api key is hidden.

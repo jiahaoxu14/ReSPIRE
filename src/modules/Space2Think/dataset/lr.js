@@ -27,7 +27,7 @@ function addAttributesToJson(jsonData) {
             y: 120,
             props: {
                 w: 500,
-                h: 350,
+                h: 300,
                 label: item['label'],
                 content: item['content'],
             }
