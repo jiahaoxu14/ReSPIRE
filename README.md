@@ -7,9 +7,8 @@
 2. run `npm install --force` 
 
 ### Setting
-- Change the Open AI API Key:
-Please open the file "spire/src/modules/Space2Think/ReportGeneration.tsx", modify the code
-`process.env.OPENAI_API_KEY="<Your Open AI API Key>"`
+- Add your Open AI API Key:
+Click the `GENERATE` button and the system will ask you to enter your OpenAI API key.
 
 ### Running
 Enter into `src` folder, run the command `npm start`
