@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
-export function ApiKeyDialog({ open, onClose, error: apiError }) {
+export function ApiKeyDialog({ open, onClose, error: apiError, onApiKeySaved }) {
     const [apiKey, setApiKey] = useState('');
     const [validationError, setValidationError] = useState('');
 
@@ -44,8 +44,9 @@ export function ApiKeyDialog({ open, onClose, error: apiError }) {
             setValidationError(error);
             return;
         }
-        
-        // Create a hidden input element to store the API key
+        // Save to localStorage
+        localStorage.setItem('openai_key_risky_but_cool', apiKey);
+        // Also update the hidden input for legacy code
         let input = document.getElementById('openai_key_risky_but_cool');
         if (!input) {
             input = document.createElement('input');
@@ -55,7 +56,8 @@ export function ApiKeyDialog({ open, onClose, error: apiError }) {
         }
         input.value = apiKey;
         setValidationError('');
-        onClose();
+        if (onApiKeySaved) onApiKeySaved(apiKey);
+        onClose(); // Only close if valid
     };
 
     const handleKeyChange = (e) => {
@@ -72,7 +74,8 @@ export function ApiKeyDialog({ open, onClose, error: apiError }) {
     return (
         <Dialog 
             open={open} 
-            onClose={onClose}
+            onClose={() => {}}
+            disableEscapeKeyDown
             maxWidth="sm"
             fullWidth
         >
@@ -119,7 +122,7 @@ export function ApiKeyDialog({ open, onClose, error: apiError }) {
                 </Typography>
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose}>Cancel</Button>
+                {/* <Button onClick={onClose}>Cancel</Button> */}
                 <Button 
                     onClick={handleSave} 
                     variant="contained" 
