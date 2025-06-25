@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  respire-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    container_name: respire-dev
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+    volumes:
+      # Mount source code for hot reloading
+      - .:/app
+      - /app/node_modules
+    stdin_open: true
+    tty: true 
