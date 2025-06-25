@@ -340,7 +340,7 @@ export default function Space() {
         for (var item in report["Middle_paragraph"]){
             const text = report["Middle_paragraph"][item]["text"]
             const citation = report["Middle_paragraph"][item]["name entities"].concat(", ").concat(report["Middle_paragraph"][item]["keywords"])
-            console.log(`[${current()}]`+ "[keywordsToST] citation", citation);
+            // console.log(`[${current()}]`+ "[keywordsToST] citation", citation);
             keywords[report["Middle_paragraph"][item].id] = {}
             if (citation){
                 let entries = [];
@@ -350,7 +350,7 @@ export default function Space() {
                 }else{
                     entries = citation;
                 }
-                console.log(`[${current()}]`+ "[keywordsToST] entries", entries)
+                // console.log(`[${current()}]`+ "[keywordsToST] entries", entries)
                 entries.forEach(entry => {
                     let [match1, match2] = entry.split('[')
                     // let match1 = entry.match(/^(.*?)\[(.*?)\]$/);
@@ -385,7 +385,7 @@ export default function Space() {
             }
             
         }
-        console.log(`[${current()}]`+ "[Space2Think] keywords_dict", keywords)
+        // console.log(`[${current()}]`+ "[Space2Think] keywords_dict", keywords)
 
         // get whole llm highlights
         let llmKy = {}
@@ -401,7 +401,7 @@ export default function Space() {
                 }
             }
         }
-        console.log(`[${current()}]`+ "[Space2Think] llmKyList", llmKyList)
+        // console.log(`[${current()}]`+ "[Space2Think] llmKyList", llmKyList)
 
         // get whole space highlights
         const snapshot = editor.store.getSnapshot();
@@ -448,7 +448,7 @@ export default function Space() {
                 // });
             }
         }
-        console.log(`[${current()}]`+ "[Space2Think] spaceKy", spaceHlKy, spaceComKy, spaceLlmKy)
+        // console.log(`[${current()}]`+ "[Space2Think] spaceKy", spaceHlKy, spaceComKy, spaceLlmKy)
         
         // processed keywords for the whole space
         const newSpaceKy = {}
@@ -474,7 +474,7 @@ export default function Space() {
             newSpaceKy["llmKy"].push(keyword)
         }
 
-        console.log(`[${current()}]`+ "[Space2Think] newSpaceKy", newSpaceKy)
+        // console.log(`[${current()}]`+ "[Space2Think] newSpaceKy", newSpaceKy)
 
         // const simNewChl = newSpaceKy["comKy"].map((item) => simplifyStrings(item));
         // const simNewLky = newSpaceKy["llmKy"].map((item) => simplifyStrings(item));
@@ -593,9 +593,9 @@ export default function Space() {
                 }
             }
         
-        console.log(`[${current()}]`+ "[Space2Think] allKeywords", allKeywords)
+        // console.log(`[${current()}]`+ "[Space2Think] allKeywords", allKeywords)
         dispatch(setKeywords(allKeywords))
-        console.log(`[${current()}]`+ "[Space2Think] snapshot", editor.store.getSnapshot())
+        // console.log(`[${current()}]`+ "[Space2Think] snapshot", editor.store.getSnapshot())
         
     }
 
@@ -641,7 +641,7 @@ export default function Space() {
                 // keywords["omitKy"] = keywords["omitKy"].concat(omitky);
             }
         }
-        console.log(`[${current()}]`+ "[Space2Think] keywords", keywords)
+        // console.log(`[${current()}]`+ "[Space2Think] keywords", keywords)
         return keywords
     }
 
@@ -679,7 +679,7 @@ export default function Space() {
         if (snapshot !== null && snapshot !== undefined){
             if (search !== ''){
                 let searchedDoc = [];
-                console.log(`[${current()}]`+ "[Space2Think] search", search);
+                //console.log(`[${current()}]`+ "[Space2Think] search", search);
                 for (var item in snapshot.store){
                     if(snapshot.store[item].type === "xx_html"){
                         const id = item;
@@ -711,7 +711,7 @@ export default function Space() {
                     }
                 }
                 setSearchResult(searchedDoc);   
-                console.log(`[${current()}]`+ "[Space2Think] searchedDoc", searchedDoc)         
+                // console.log(`[${current()}]`+ "[Space2Think] searchedDoc", searchedDoc)         
             }
         }
     }, [search]);
@@ -729,7 +729,7 @@ export default function Space() {
         if (snapshot !== null && snapshot !== undefined && curClickedNodeKey !== null && curClickedNodeKey !== undefined){
             if (curClickedNodeKey.includes('shape')) {
                 // section node
-                console.log(`[${current()}]`+ "[Space2Think] curClickedNodeKey is frame", curClickedNodeKey)
+                // console.log(`[${current()}]`+ "[Space2Think] curClickedNodeKey is frame", curClickedNodeKey)
                 for (var item in snapshot.store){
                     if(snapshot.store[item].type==="frame" && snapshot.store[item].id === curClickedNodeKey){
                         x = snapshot.store[item].x;
@@ -746,7 +746,7 @@ export default function Space() {
                 editor?.select(curClickedNodeKey);
             }else if (curClickedNodeKey.includes('_')) {
                 // citation node
-                console.log(`[${current()}]`+ "[Space2Think] curClickedNodeKey is document", curClickedNodeKey)
+                // console.log(`[${current()}]`+ "[Space2Think] curClickedNodeKey is document", curClickedNodeKey)
                 for (var item in snapshot.store){
                     if(snapshot.store[item].type === "xx_html" && snapshot.store[item].props.label === curClickedNodeKey){
                         // console.log(`[${current()}]`+ "[Space to Think] item", snapshot.store[item])
@@ -767,7 +767,7 @@ export default function Space() {
                             x = x1;
                             y = y1;
                         }
-                        console.log(`[${current()}]`+ "[Space to Think] x", x, "y", y)
+                        // console.log(`[${current()}]`+ "[Space to Think] x", x, "y", y)
                         if (reportOpen) {
                             editor?.setCamera({ x: -x+200, y: -y+300, z: 1 }, { duration: 500, easing: (t) => t * t });
                         }
@@ -818,7 +818,7 @@ export default function Space() {
                 
                 let shapes = {};
                 let weirdId = null;
-                console.log(`[${current()}]`+ "[Space2Think] the doc entity is in:", doc)
+                // console.log(`[${current()}]`+ "[Space2Think] the doc entity is in:", doc)
                 if (doc){
                     for (var item in snapshot.store){
                         if(snapshot.store[item].type === "xx_html" ){
@@ -878,7 +878,7 @@ export default function Space() {
                     
     
                     if(Object.keys(shapes).length==1){
-                        console.log(`[${current()}]`+ "[Space2think] one keyword in one document")
+                        // console.log(`[${current()}]`+ "[Space2think] one keyword in one document")
                         const id = Object.keys(shapes)[0];
                         let x = shapes[id].x;
                         let y = shapes[id].y;
@@ -888,7 +888,7 @@ export default function Space() {
                         editor?.select(id);
                     }
                     else if (Object.keys(shapes).length>1){
-                        console.log(`[${current()}]`+ "[Space2think] one keyword in different documents")
+                        // console.log(`[${current()}]`+ "[Space2think] one keyword in different documents")
                         let parent = {}
     
                         for (var item in shapes){
@@ -896,7 +896,7 @@ export default function Space() {
                                 parent[shapes[item].parent] = [shapes[item].parentX, shapes[item].parentY, shapes[item].parentW, shapes[item].parentH]
                             }
                         }
-                        console.log(`[${current()}]`+ "[Space2think] the keyword's parents", parent)
+                        // console.log(`[${current()}]`+ "[Space2think] the keyword's parents", parent)
     
                         // same parent
                         if (Object.keys(parent).length == 1){
@@ -919,7 +919,7 @@ export default function Space() {
                             }
                         }else if (Object.keys(parent).length > 1){
                             // different parents
-                            console.log(`[${current()}]`+ "[Space2think] one keyword in different clusters")
+                            // console.log(`[${current()}]`+ "[Space2think] one keyword in different clusters")
                             let minX = 100000;
                             let maxX = 0;
                             let minY = 100000;
@@ -975,32 +975,32 @@ export default function Space() {
 
     useEffect(() => {
         const currentSelected = editor?.getSelectedShapeIds();
-        console.log(`[${current()}]`+ "[Space2think] currentSelected shapeid:", currentSelected)
+        // console.log(`[${current()}]`+ "[Space2think] currentSelected shapeid:", currentSelected)
         if (currentSelected !== null && currentSelected !== undefined && Object.keys(snapshot.store).length > 2 && currentSelected.length ===1){
             if (snapshot.store[currentSelected[0]]!==undefined){
                 if (snapshot.store[currentSelected[0]].type==="xx_html"){
                     const label = snapshot.store[currentSelected[0]].props.label;
                     dispatch(setSelectedId(label));
-                    console.log(`[${current()}]`+ "[Space2think] document is selected", label)
+                    // console.log(`[${current()}]`+ "[Space2think] document is selected", label)
                     // console.log(`[${current()}]`+ "[Space2think] dispatch selected document label", label)
                 }
                 else if (snapshot.store[currentSelected[0]].type==="frame"){
                     const id = currentSelected[0];
                     dispatch(setSelectedId(id));
-                    console.log(`[${current()}]`+ "[Space2think] frame (id) is selected", id)
+                    // console.log(`[${current()}]`+ "[Space2think] frame (id) is selected", id)
                     // console.log(`[${current()}]`+ "[Space2think] dispatch selected frame id", id)
                 }
             }
             else{
-                console.log(`[${current()}]`+ "[Space2think] clicked one deleted shape in report")
+                // console.log(`[${current()}]`+ "[Space2think] clicked one deleted shape in report")
             }
         }
         else if (currentSelected && currentSelected.length===0){
             // console.log(`[${current()}]`+ "[Space2think] dispatch selected blank")
-            console.log(`[${current()}]`+ "[Space2think] selected blank")
+            // console.log(`[${current()}]`+ "[Space2think] selected blank")
             dispatch(setSelectedId(null));
         }
-        if (snapshot){console.log(`[${current()}]`+ "[Space2think] snapshot getselectedshapeIds", JSON.stringify(snapshot))}
+        // if (snapshot){// console.log(`[${current()}]`+ "[Space2think] snapshot getselectedshapeIds", JSON.stringify(snapshot))}
     },[editor?.getSelectedShapeIds()])
 
     useEffect(() => {
@@ -1041,7 +1041,7 @@ export default function Space() {
     useEffect(() => {
         // dispatch(setCurClickedNodeKey(selectedEntity))
         if (selectedEntity !== null && selectedEntity !== undefined && selectedEntity !== ""){
-            console.log(`[${current()}]`+ "[Space2Think] selectedEntity", selectedEntity);
+            // console.log(`[${current()}]`+ "[Space2Think] selectedEntity", selectedEntity);
             const selectedhl = [selectedEntity];
             if (snapshot !== null && snapshot !== undefined){
                 for (var item in snapshot.store){
@@ -1098,8 +1098,8 @@ export default function Space() {
                 }
             }
             if (ifhaveFrame){
-                console.log(`[${current()}]`+ "[Space2Think] Enter into the refined report generation");
-                console.log(`[${current()}]`+ "[Space2Think] snapshot for generation", snapshot);
+                // console.log(`[${current()}]`+ "[Space2Think] Enter into the refined report generation");
+                // console.log(`[${current()}]`+ "[Space2Think] snapshot for generation", snapshot);
                 generatedReport = await reportGeneration(editor?.store.getSnapshot(), taskDescription, introduction, clusterDescription, conclusion);
                 reportToClusterName(editor, generatedReport);
                 keywordsToST(editor, generatedReport);
@@ -1111,7 +1111,7 @@ export default function Space() {
                 setLoading(false);
                 setReportFinish(true);
             } else {
-                console.log(`[${current()}]`+ "[Space2Think] Enter into the initial report generation");
+                // console.log(`[${current()}]`+ "[Space2Think] Enter into the initial report generation");
                 const blankReport = await reportGenerationBlank(editor?.store.getSnapshot(), taskDescription, introduction, clusterDescription, conclusion);
                 generatedReport = await reportToSpace(editor, blankReport);
                 keywordsToST(editor, generatedReport);
@@ -1120,7 +1120,7 @@ export default function Space() {
                 setLoading(false);
                 setReportFinish(true);
             }
-            console.log(`[${current()}]`+ "[Space2Think] generated report:", generatedReport);
+            // console.log(`[${current()}]`+ "[Space2Think] generated report:", generatedReport);
             setApiKeyError(''); // Clear any previous errors on success
         } catch (error) {
             console.error(`[${current()}]`+ "[Space2Think] Error generating report:", error);
@@ -1186,13 +1186,24 @@ export default function Space() {
                 editor?.packShapes(editor?.getSelectedShapeIds(), 30);
                 editor?.selectNone();
                 
-                console.log(`[${current()}]`+ "[Space2Think] Uploaded documents", data);
+                // console.log(`[${current()}]`+ "[Space2Think] Uploaded documents", data);
             } catch (error) {
                 console.error(`[${current()}]`+ "[Space2Think] Error uploading documents:", error);
                 alert('Error uploading documents: ' + error.message);
             }
         };
     }
+
+    useEffect(() => {
+        if (editor) {
+            handleGenerateReport();
+        }
+        // Optionally, you can add a check for API key input here if you want to avoid the dialog on load
+        // const apiKeyInput = document.getElementById('openai_key_risky_but_cool');
+        // if (apiKeyInput && apiKeyInput.value) {
+        //     handleGenerateReport();
+        // }
+    }, [editor]);
 
     return (
         <Box>
@@ -1274,7 +1285,7 @@ export default function Space() {
                                                     fileReader.readAsText(event.target.files[0], "UTF-8");
                                                     fileReader.onload = (event) => {
                                                         const snapshotData = JSON.parse(event.target.result);
-                                                        console.log(`[${current()}]`+ "[Space2Think] Uploaded Json Data", snapshotData);
+                                                        // console.log(`[${current()}]`+ "[Space2Think] Uploaded Json Data", snapshotData);
                                                         localStorage.setItem('my-editor-snapshot', JSON.stringify(snapshotData));
                                                         const stringified = localStorage.getItem('my-editor-snapshot');
                                                         const snapshot = JSON.parse(stringified);
@@ -1314,7 +1325,7 @@ export default function Space() {
                         onClick={() => {
                             snapshot.current = editor?.store.getSnapshot()
                             const stringified = JSON.stringify(snapshot)
-                            console.log(`[${current()}]`+ "[Space to Think] saved snapshot", stringified)
+                            // console.log(`[${current()}]`+ "[Space to Think] saved snapshot", stringified)
                             saveSnapshot(stringified)
                         }}
                         >
@@ -1391,7 +1402,7 @@ export default function Space() {
                                                 <MenuItem 
                                                 style = {{color: 'green'}}
                                                 onClick={(event) => {
-                                                    console.log(`[${current()}]`+ "[Space2Think] clicked item from search")
+                                                    // console.log(`[${current()}]`+ "[Space2Think] clicked item from search")
                                                     event.stopPropagation()
                                                     dispatch(setCurClickedNodeKey(item.name))
                                                     // handleSOpen();
