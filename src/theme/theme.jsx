@@ -1,5 +1,7 @@
 import { createTheme } from '@mui/material/styles';
 import "@fontsource/varela-round"
+import "@fontsource/inter/500.css"
+import "@fontsource/inter/700.css"
 
 const theme = createTheme({
     "typography": {
