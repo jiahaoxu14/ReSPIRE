@@ -9,25 +9,12 @@ strong
     color: red;
 } */
 
-/* @import url("https://fonts.googleapis.com/css2?family=Inter:wght@500;700;&display=swap");
-@import url("tldraw/tldraw.css"); */
+/* Disable external Google Fonts import */
+/* @import url("https://fonts.googleapis.com/css2?family=Inter:wght@500;700;&display=swap"); */
+@import url("tldraw/tldraw.css");
 
-@font-face {
-  font-family: 'Inter';
-  src: url('/fonts/Inter/Inter-Medium.woff2') format('woff2'),
-       url('/fonts/Inter/Inter-Medium.woff') format('woff');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Inter';
-  src: url('/fonts/Inter/Inter-Bold.woff2') format('woff2'),
-       url('/fonts/Inter/Inter-Bold.woff') format('woff');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
+/* Import local Inter fonts */
+@import url('/src/assets/fonts/Inter/inter.css');
 
 /* If you use specific weights, add more @font-face blocks for each */
 
