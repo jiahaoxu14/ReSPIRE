@@ -1,0 +1,42 @@
+
+export const data = [
+    {label: "Paper_14", content: "We report the development of GPT-4, a large-scale, multimodal model which can accept image and text inputs and produce text outputs. While less capable than humans in many real-world scenarios, GPT-4 exhibits human-level performance on various professional and academic benchmarks, including passing a simulated bar exam with a score around the top 10% of test takers. GPT-4 is a Transformer-based model pre-trained to predict the next token in a document. The post-training alignment process results in improved performance on measures of factuality and adherence to desired behavior. A core component of this project was developing infrastructure and optimization methods that behave predictably across a wide range of scales. This allowed us to accurately predict some aspects of GPT-4's performance based on models trained with no more than 1/1,000th the compute of GPT-4."},
+    {label: "Paper_4", content: "Artificial intelligence (AI) researchers have been developing and refining large language models (LLMs) that exhibit remarkable capabilities across a variety of domains and tasks, challenging our understanding of learning and cognition. The latest model developed by OpenAI, GPT-4, was trained using an unprecedented scale of compute and data. In this paper, we report on our investigation of an early version of GPT-4, when it was still in active development by OpenAI. We contend that (this early version of) GPT-4 is part of a new cohort of LLMs (along with ChatGPT and Google's PaLM for example) that exhibit more general intelligence than previous AI models. We discuss the rising capabilities and implications of these models. We demonstrate that, beyond its mastery of language, GPT-4 can solve novel and difficult tasks that span mathematics, coding, vision, medicine, law, psychology and more, without needing any special prompting. Moreover, in all of these tasks, GPT-4's performance is strikingly close to human-level performance, and often vastly surpasses prior models such as ChatGPT. Given the breadth and depth of GPT-4's capabilities, we believe that it could reasonably be viewed as an early (yet still incomplete) version of an artificial general intelligence (AGI) system. In our exploration of GPT-4, we put special emphasis on discovering its limitations, and we discuss the challenges ahead for advancing towards deeper and more comprehensive versions of AGI, including the possible need for pursuing a new paradigm that moves beyond next-word prediction. We conclude with reflections on societal influences of the recent technological leap and future research directions."},
+    {label: "Paper_21", content: "People are increasingly turning to large language models (LLMs) for complex information tasks like academic research or planning a move to another city. However, while they often require working in a nonlinear manner -- e.g., to arrange information spatially to organize and make sense of it, current interfaces for interacting with LLMs are generally linear to support conversational interaction. To address this limitation and explore how we can support LLM-powered exploration and sensemaking, we developed Sensecape, an interactive system designed to support complex information tasks with an LLM by enabling users to (1) manage the complexity of information through multilevel abstraction and (2) seamlessly switch between foraging and sensemaking. Our within-subject user study reveals that Sensecape empowers users to explore more topics and structure their knowledge hierarchically, thanks to the externalization of levels of abstraction. We contribute implications for LLM-based workflows and interfaces for information tasks."},
+    {label: "Paper_9", content: "Efficiently reviewing scholarly literature and synthesizing prior art are crucial for scientific progress. Yet, the growing scale of publications and the burden of knowledge make synthesis of research threads more challenging than ever. While significant research has been devoted to helping scholars interact with individual papers, building research threads scattered across multiple papers remains a challenge. Most top-down synthesis (and LLMs) make it difficult to personalize and iterate on the output, while bottom-up synthesis is costly in time and effort. Here, we explore a new design space of mixed-initiative workflows. In doing so we develop a novel computational pipeline, Synergi, that ties together user input of relevant seed threads with citation graphs and LLMs, to expand and structure them, respectively. Synergi allows scholars to start with an entire threads-and-subthreads structure generated from papers relevant to their interests, and to iterate and customize on it as they wish. In our evaluation, we find that Synergi helps scholars efficiently make sense of relevant threads, broaden their perspectives, and increases their curiosity. We discuss future design implications for thread-based, mixed-initiative scholarly synthesis support tools."},
+    {label: "Paper_12", content: "Sensemaking in unfamiliar domains can be challenging, demanding considerable user effort to compare different options with respect to various criteria. Prior research and our formative study found that people would benefit from reading an overview of an information space upfront, including the criteria others previously found useful. However, existing sensemaking tools struggle with the 'cold-start' problem -- it not only requires significant input from previous users to generate and share these overviews, but such overviews may also turn out to be biased and incomplete. In this work, we introduce a novel system, Selenite, which leverages Large Language Models (LLMs) as reasoning machines and knowledge retrievers to automatically produce a comprehensive overview of options and criteria to jumpstart users' sensemaking processes. Subsequently, Selenite also adapts as people use it, helping users find, read, and navigate unfamiliar information in a systematic yet personalized manner. Through three studies, we found that Selenite produced accurate and high-quality overviews reliably, significantly accelerated users' information processing, and effectively improved their overall comprehension and sensemaking experience."},
+    {label: "Paper_18", content: "This paper describes PULSAR, our system submission at the ImageClef 2023 MediQA-Sum task on summarising patient-doctor dialogues into clinical records. The proposed framework relies on domain-specific pre-training, to produce a specialised language model which is trained on task-specific natural data augmented by synthetic data generated by a black-box LLM. We find limited evidence towards the efficacy of domain-specific pre-training and data augmentation, while scaling up the language model yields the best performance gains. Our approach was ranked second and third among 13 submissions on task B of the challenge."},
+    {label: "Paper_8", content: "Evaluating text summarization is a challenging problem, and existing evaluation metrics are far from satisfactory. In this study, we explored ChatGPT's ability to perform human-like summarization evaluation using four human evaluation methods on five datasets. We found that ChatGPT was able to complete annotations relatively smoothly using Likert scale scoring, pairwise comparison, Pyramid, and binary factuality evaluation. Additionally, it outperformed commonly used automatic evaluation metrics on some datasets. Furthermore, we discussed the impact of different prompts, compared its performance with that of human evaluation, and analyzed the generated explanations and invalid responses."},
+]
+
+// const type = 'xx_html';
+// const x = 100;
+// const y = 100;
+const highlight = [];
+const testShapes = {}
+
+function addAttributesToJson(jsonData) {
+    // console.log('jsonData', jsonData)
+    const result = []
+    // Loop through each item in the jsonData array
+    jsonData.forEach(item => {
+        // Add each new attribute and its value to the item
+        result.push({
+            type: 'xx_html',
+            x: 120,
+            y: 120,
+            props: {
+                w: 500,
+                h: 300,
+                label: item['label'],
+                content: item['content'],
+            }
+        })
+    });
+
+    return result;
+}
+
+const lr = addAttributesToJson(data);
+
+export default lr;

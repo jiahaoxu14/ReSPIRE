@@ -1,0 +1,18 @@
+[
+    {
+        "label": "Document_1",
+        "content": "This is the first document's content. The content can be any length and can include punctuation, numbers, and special characters."
+    },
+    {
+        "label": "Research_Paper_2",
+        "content": "Abstract: This research paper discusses important findings. The study was conducted over a period of 6 months and involved multiple participants."
+    },
+    {
+        "label": "Meeting_Notes_3",
+        "content": "Meeting Date: 2024-03-15\nAttendees: John, Sarah, Mike\nKey Points:\n- Discussed project timeline\n- Reviewed budget constraints\n- Set next meeting date"
+    },
+    {
+        "label": "Technical_Doc_4",
+        "content": "System Requirements:\n1. Node.js v14 or higher\n2. MongoDB v4.2\n3. Minimum 4GB RAM\n\nInstallation steps:\n1. Clone repository\n2. Run npm install\n3. Configure environment variables"
+    }
+] 
