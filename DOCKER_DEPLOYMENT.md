@@ -1,123 +1,163 @@
-# ReSPIRE - Offline Docker Deployment
+# 🚀 ReSPIRE Application - Easy Setup Guide
 
-This guide explains how to build and run the ReSPIRE application using Docker **without internet connection**.
+This guide will help you run the ReSPIRE application on your computer **without needing internet access**.
 
-## Prerequisites
+## ✅ What You Need First
 
-Your colleague will need:
-1. Docker Desktop installed on their machine
-2. Docker Compose (usually included with Docker Desktop)
+Before starting, make sure you have:
 
-## Files Included
+1. **Docker Desktop** installed on your computer
+   - **Windows/Mac**: Download from https://www.docker.com/products/docker-desktop
+   - **After installation**: Make sure Docker Desktop is running (you'll see a whale icon in your taskbar/menu bar)
 
-This deployment package includes:
-- `Dockerfile` - Multi-stage build configuration
-- `docker-compose.yml` - Simple deployment orchestration
-- `nginx.conf` - Web server configuration
-- `.dockerignore` - Build optimization
-- All source code and dependencies
+2. **The deployment package** (`respire-offline-deployment.tar.gz`) that was sent to you
 
-## Quick Start (Recommended)
+## 📦 Step 1: Extract the Package
 
-### Option 1: Using Docker Compose (Easiest)
+1. **Create a folder** on your desktop or anywhere convenient (e.g., `ReSPIRE-App`)
+2. **Copy** the `respire-offline-deployment.tar.gz` file into that folder
+3. **Extract the file**:
+   - **Windows**: Right-click → "Extract All"
+   - **Mac**: Double-click the file
+   - **Command line**: `tar -xzf respire-offline-deployment.tar.gz`
 
-1. Open terminal/command prompt
-2. Navigate to the project folder:
+After extraction, you should see a folder called `respire-offline-deployment` with files inside.
+
+## 🔧 Step 2: Load Docker Images (REQUIRED FOR OFFLINE USE)
+
+**⚠️ CRITICAL: You MUST do this step first or the build will fail!**
+
+1. **Open Terminal/Command Prompt**:
+   - **Windows**: Press `Win + R`, type `cmd`, press Enter
+   - **Mac**: Press `Cmd + Space`, type `terminal`, press Enter
+
+2. **Navigate to the extracted folder**:
    ```bash
-   cd /path/to/ReSPIRE
+   cd path/to/your/respire-offline-deployment
    ```
-3. Build and run the application:
+   *Replace `path/to/your` with the actual path where you extracted the files*
+
+3. **Load the Docker base images** (THIS IS MANDATORY):
+   ```bash
+   ./load-offline-images.sh
+   ```
+   
+   **You should see:**
+   ```
+   🐳 Loading Docker images for offline deployment...
+   1/2 Loading node:18-alpine...
+   Loaded image: node:18-alpine
+   2/2 Loading nginx:alpine...
+   Loaded image: nginx:alpine
+   ✅ Docker images loaded successfully!
+   ```
+
+   **If this step fails:**
+   - Make sure Docker Desktop is running (whale icon visible)
+   - On Windows: Try `bash load-offline-images.sh` instead
+   - The `offline-images` folder must be present
+
+## 🎯 Step 3: Build and Run the Application (EASIEST METHOD)
+
+1. **Navigate to the extracted folder**:
+   ```bash
+   cd path/to/your/respire-offline-deployment
+   ```
+   *Replace `path/to/your` with the actual path where you extracted the files*
+
+2. **Build and start the application** (this is the magic command):
    ```bash
    docker-compose up --build
    ```
-4. Open your web browser and go to: http://localhost:3000
 
-To stop the application:
-```bash
-docker-compose down
-```
+## ⏰ What to Expect During Build
 
-### Option 2: Using Docker Commands
+- **First time**: The build will take **5-10 minutes** (installing and building everything)
+- **Look for these success indicators**:
+  ```
+  ✅ Successfully built
+  ✅ Successfully tagged
+  ✅ Creating respire-app
+  ✅ respire-app exited with code 0
+  ```
 
-1. Build the image:
+## 🌐 Step 4: Access the Application
+
+1. **Wait for the build to complete** (when text stops scrolling and you see "respire-app" running)
+2. **Open your web browser**
+3. **Go to**: http://localhost:3000
+4. **You should see the ReSPIRE application load!**
+
+## 🛑 How to Stop the Application
+
+When you're done using the application:
+
+1. **In the terminal where it's running**: Press `Ctrl + C` (Windows/Mac)
+2. **Or run this command in a new terminal**:
    ```bash
-   docker build -t respire-app .
+   docker-compose down
    ```
 
-2. Run the container:
-   ```bash
-   docker run -d -p 3000:80 --name respire-container respire-app
-   ```
+## 🔧 If Something Goes Wrong
 
-3. Open your web browser and go to: http://localhost:3000
+### Problem: "failed to resolve source metadata" or "no such host" error
+**This is the most common issue!**
 
-To stop and remove the container:
-```bash
-docker stop respire-container
-docker rm respire-container
+**Error looks like:**
+```
+failed to solve: node:18-alpine: failed to resolve source metadata...
+dial tcp: lookup registry-1.docker.io: no such host
 ```
 
-## Using the Application
+**Solution:**
+1. **You skipped Step 2!** Go back and run `./load-offline-images.sh` first
+2. **Verify images are loaded:** Run `docker images | grep alpine`
+3. **You should see both `node` and `nginx` images listed**
+4. **Then try building again:** `docker-compose up --build`
 
-1. **Initial Setup**: When you first open the application, click the `GENERATE` button and enter your OpenAI API key when prompted.
+### Problem: Build fails or takes too long
+**Solutions**:
+1. **Make sure Docker Desktop is running** (check for whale icon)
+2. **Give Docker more memory**:
+   - Open Docker Desktop → Settings → Resources → Memory
+   - Set to at least 4GB
+3. **Try again**: `docker-compose up --build`
 
-2. **Main Features**:
-   - Access tasks through `File` button in the main toolbar
-   - Upload your own documents via `File` → `Upload documents`
-   - Save your work with `Save Draft`
-   - Generate reports with the `Generate Report` button
-   - View reports using the `show report` button
+### Problem: Application doesn't load in browser
+**Solutions**:
+1. **Wait 30 seconds** after the build completes
+2. **Check if it's running**: `docker ps` (should show "respire-app")
+3. **Check for errors**: `docker-compose logs`
 
-3. **Document Format**: If uploading custom documents, use this JSON format:
+## 🎮 Using the ReSPIRE Application
+
+Once the application opens in your browser:
+
+1. **First time setup**: 
+   - Click the `GENERATE` button
+   - Enter your OpenAI API key when prompted
+
+2. **Main features**:
+   - **File menu**: Access different tasks and upload documents
+   - **Save Draft**: Save your work
+   - **Generate Report**: Create AI-powered reports
+   - **Show Report**: View generated reports
+
+3. **Uploading documents**: Use this JSON format:
    ```json
    [
        {
-           "label": "Document_1",
-           "content": "Your document content here..."
-       },
-       {
-           "label": "Document_2", 
-           "content": "Another document content..."
+           "label": "Document_1", 
+           "content": "Your text content here..."
        }
    ]
    ```
 
-## Troubleshooting
+## 🔄 Restarting the Application Later
 
-### Common Issues
+To use the application again after closing it:
 
-1. **Port 3000 already in use**:
-   - Change the port in `docker-compose.yml` from `"3000:80"` to `"3001:80"` (or any other available port)
-   - Then access the app at http://localhost:3001
-
-2. **Build fails**:
-   - Ensure Docker has enough memory allocated (at least 4GB recommended)
-   - Check Docker Desktop settings
-
-3. **Application doesn't load**:
-   - Wait a few seconds after starting the container
-   - Check if the container is running: `docker ps`
-   - Check logs: `docker-compose logs` or `docker logs respire-container`
-
-### Useful Commands
-
-- **View running containers**: `docker ps`
-- **View all containers**: `docker ps -a`
-- **View logs**: `docker-compose logs` or `docker logs respire-container`
-- **Restart application**: `docker-compose restart`
-- **Rebuild after code changes**: `docker-compose up --build`
-
-## Technical Details
-
-- **Application**: React-based single-page application
-- **Web Server**: Nginx (lightweight and efficient)
-- **Port**: Application runs on port 80 inside container, mapped to port 3000 on host
-- **Build Process**: Multi-stage Docker build for optimized image size
-- **Dependencies**: All npm packages are included in the build process
-
-## Notes
-
-- The application is completely self-contained after building
-- No internet connection required to run (only for OpenAI API calls during usage)
-- All static assets are properly cached for optimal performance
-- The container will automatically restart unless manually stopped 
+1. **Navigate to the folder**: `cd path/to/respire-offline-deployment`
+2. **Start it up**: `docker-compose up`
+   - *Note: No `--build` needed after the first time*
+3. **Open browser**: http://localhost:3000

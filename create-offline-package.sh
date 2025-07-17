@@ -20,10 +20,22 @@ cp docker-compose.yml $DEPLOY_DIR/
 cp nginx.conf $DEPLOY_DIR/
 cp .dockerignore $DEPLOY_DIR/
 cp DOCKER_DEPLOYMENT.md $DEPLOY_DIR/
+cp load-offline-images.sh $DEPLOY_DIR/
+chmod +x $DEPLOY_DIR/load-offline-images.sh
 
 # Copy additional files if they exist
 [ -f .env.example ] && cp .env.example $DEPLOY_DIR/
 [ -f README.md ] && cp README.md $DEPLOY_DIR/
+
+# Copy offline Docker images if they exist
+if [ -d "offline-images" ]; then
+    echo "Including offline Docker images..."
+    cp -r offline-images $DEPLOY_DIR/
+else
+    echo "⚠️  Warning: offline-images directory not found!"
+    echo "   Run './prepare-offline-images.sh' first to include Docker base images"
+    echo "   for truly offline deployment."
+fi
 
 echo "Creating deployment package archive..."
 tar -czf respire-offline-deployment.tar.gz $DEPLOY_DIR
